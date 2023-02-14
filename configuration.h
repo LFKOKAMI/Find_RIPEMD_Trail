@@ -58,7 +58,13 @@ class Primitive {
 private:
 	const string fNameR[5] = { "ONX","IFZ","ONZ","IFX","XOR" };
 	const string fNameL[5] = { "XOR","IFX","ONZ","IFZ","ONX" };
+	int threadNum = 4;
+	int outputInfo = 1;
 public:
+	Primitive();
+	void setThreadNum(int number);
+	void setOutputInfo(int info);
+
 	void addition(
 		GRBModel& model, 
 		GRBVar& a0, GRBVar& a1, GRBVar& a2, GRBVar& a3, 
@@ -149,7 +155,6 @@ public:
 		vector<GRBVar>& qv, vector<GRBVar>& outCarry,
 		vector<GRBVar>& value, vector<Var>& innerCarry, vector<Var>& outerCarry);
 
-
 	void rotateState(GRBModel& model, int shift,
 		vector<Var>& x, vector<Var>& y, Aux& aux);
 	void expandState(GRBModel& model, int shift, int isK,
@@ -159,21 +164,16 @@ public:
 	void addExpandState(GRBModel& model, int s0, int s1,
 		vector<Var>& a1, vector<Var>& b4, vector<Var>& a5, vector<Var>& c);
 
-	//initialization
+	//initialize variables
 	void initializeVar(GRBModel &model, vector<vector <GRBVar> >& var, int size);
 	void initializeVar(GRBModel& model, vector<GRBVar>& var, int size);
-
-	//new initialization
 	void initializeVar(GRBModel& model, vector<vector <Var> >& var, int size);
 	void initializeVar(GRBModel& model, vector<Var>& var, int size);
 	void initializeVar(GRBModel& model, vector<Aux>& var);
 
 	void setZero(GRBModel& model, Var& var);
-	//load constraints
-	void loadConstraint(
-		GRBModel& model, string& diff,
-		vector<Var>& x);
-
+	void loadConstraint(GRBModel& model, string& diff,vector<Var>& x);//load constraints
+	void loadCondition(GRBModel& model, string diff,vector<GRBVar>& v);//load constraints
 
 	void modelRoundFunction(
 		GRBModel& model, int step,
@@ -186,110 +186,42 @@ public:
 		vector<Var>& q, Aux& aux
 		);
 
-	bool buildModel(int start, int end, int isRight,
-		int *isC, int *isF, int *isV,
-		vector<string> &diff,
-		string mPattern[],
-		vector<string>& bfDiff);
-
 	bool buildModel(int start, int end, int opStart, int opSteps, int isRight,
 		vector<int>& isC, vector<int>& isF, vector<int>& isV,
 		vector<string>& diff,
 		string mPattern[],
 		vector<string>& bfDiff);
 
+	//check the result of the solver by testing all equations on q
 	bool autoCheck(int start, int isRight, 
 		string msgDiff[], vector<string>& input, vector<string>& boolOut);
-
-
-
-
-
-
-	//RIPEMD160
-	void model_RIPEMD160_FirstRound_Left();
-
-	void model_RIPEMD160_FirstRound_Left_36Collision(int s[],int length);
-	void model_RIPEMD160_FirstRound_Left_36Collision_All();
-	int model_RIPEMD160_FirstRound_Right_36Collision(int sh[],int length,GRBEnv& env);
-	void model_RIPEMD160_FirstRound_Right_NonLinear_36Collision();
-	void autoMSGModification();
-
-	void model_RIPEMD160_FirstRound_Right();
-	void model_RIPEMD160_FirstRound_Right_48Steps();
-	void rotateState(GRBModel& model, int rot,
-		vector<GRBVar>& sv, vector<GRBVar>& sd,
-		vector<GRBVar>& dv, vector<GRBVar>& dd,
-		GRBVar& midV, GRBVar& midD,
-		GRBVar& highV, GRBVar& highD);
-	void rotateStateShift10(GRBModel& model, int rot,
-		vector<GRBVar>& sv, vector<GRBVar>& sd,
-		vector<GRBVar>& dv, vector<GRBVar>& dd,
-		GRBVar& midV, GRBVar& midD,
-		GRBVar& highV, GRBVar& highD);
-	void expandState(GRBModel& model, int rot,
-		vector<GRBVar>& sv, vector<GRBVar>& sd,
-		vector<GRBVar>& ev, vector<GRBVar>& ed,
-		vector<GRBVar>& cv, vector<GRBVar>& cd );
-	void addState(GRBModel& model, int s0, int s1, 
-		vector<GRBVar>& sv0, vector<GRBVar>& sd0,
-		vector<GRBVar>& sv1, vector<GRBVar>& sd1,
-		vector<GRBVar>& ev, vector<GRBVar>& ed,
-		vector<GRBVar>& cv, vector<GRBVar>& cd);
-	void addExpandState(GRBModel& model, int s0, int s1,
-		vector<GRBVar>& sv0, vector<GRBVar>& sd0,
-		vector<GRBVar>& sv1, vector<GRBVar>& sd1,
-		vector<GRBVar>& ev, vector<GRBVar>& ed,
-		vector<GRBVar>& cv, vector<GRBVar>& cd);
-	void zeroState(GRBModel& model,
-		vector<GRBVar>& sv0, vector<GRBVar>& sd0,
-		vector<GRBVar>& sv1, vector<GRBVar>& sd1,
-		vector<GRBVar>& cv, vector<GRBVar>& cd);
-
-	//load constraints
-	void loadConstraint(
-		GRBModel& model, string diff, 
-		vector<GRBVar>& v, vector<GRBVar>& d);
-	void loadCondition(
-		GRBModel& model, string diff,
-		vector<GRBVar>& v);
-	//set hintvalue
-	void setHintValue(
-		GRBModel& model, string diff,
-		vector<GRBVar>& v, vector<GRBVar>& d);
-
-	int minus(int shift);
-
-	//output
-	void getSignedString(vector<GRBVar>& v, vector<GRBVar>& d, string &str);
-	void getSignedString(vector<Var>& x, string& str);
-	void getSignedString(vector<GRBVar>& v, vector<GRBVar>& d, vector<GRBVar>& c, string& str);
-	void outputSignedPos(string str);
-
-	//deduce conditions
-	int deduceConditions(u32 v3, u32 v2, u32 v1,GRBEnv& env);
-	void getConditionXOR(char a[], bool eq[]);
-	bool checkONX(string& x, string& y, string& z, string& w);
-	bool checkIFZ(string& x, string& y, string& z, string& w);
-	void getVal(char &x, bool& val0, bool& val1);
-	void getConditonIFZ(string& x, string& y, string& z,string& w,
-		string& cx, string& cy, string& cz );
-	void getConditonIFX(string& x, string& y, string& z, string& w,
-		string& cx, string& cy, string& cz);
-	void getConditonONX(string& x, string& y, string& z,string& w,
-		string& cx, string& cy, string& cz);
-
-
-	//get value
-	u32 getValFromSignedDiff(string &str,int shift=0);
-	void getBinaryString(u32 val,string &str);
-
-	//message modification
 	void loadConditionFromValue(GRBModel& model, u32 val, vector<GRBVar>& var);
 	void valueAddition(GRBModel& model, int s0,
 		vector<GRBVar>& x, vector<GRBVar>& y,
 		vector<GRBVar>& z, vector<GRBVar>& c);
 	void toConditionFromSignedDiff(GRBModel& model, string diff, vector<GRBVar>& var);
+
+	/*
+	//some useful functions
+	*/
+
+	//deduce conditions
+	void getConditionXOR(char a[], bool eq[]);
+	void getConditonIFZ(string& x, string& y, string& z, string& w,
+		string& cx, string& cy, string& cz);
+	void getConditonIFX(string& x, string& y, string& z, string& w,
+		string& cx, string& cy, string& cz);
+	void getConditonONX(string& x, string& y, string& z, string& w,
+		string& cx, string& cy, string& cz);
+
+	//compute (i-shift+32)%32
+	int minus(int shift);
+
+	void getSignedString(vector<Var>& x, string& str);
+
+	//get value
+	u32 getValFromSignedDiff(string &str,int shift=0);
+	void getBinaryString(u32 val,string &str);
 };
 
 #endif
