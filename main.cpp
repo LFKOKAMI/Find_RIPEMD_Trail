@@ -186,10 +186,10 @@ int main() {
 	
 	//search the solution of unknown parts
 	//searchTrail(threadNum, outputInfo, "data/right/msgFile.txt", "data/right/diffFile.txt", "data/right/parFile.txt");
-	//searchTrail(threadNum, outputInfo, "data/left/msgFile.txt", "data/left/diffFile.txt", "data/left/parFile.txt");
+	searchTrail(threadNum, outputInfo, "data/left/msgFile.txt", "data/left/diffFile.txt", "data/left/parFile.txt");
 
 	//search sparse parts
-	searchTrail(threadNum, outputInfo, "data/right/sparse_msgFile.txt", "data/right/sparse_diffFile.txt", "data/right/sparse_parFile.txt");
+	//searchTrail(threadNum, outputInfo, "data/right/sparse_msgFile.txt", "data/right/sparse_diffFile.txt", "data/right/sparse_parFile.txt");
 	//searchTrail(threadNum, outputInfo, "data/left/sparse_msgFile.txt", "data/left/sparse_diffFile.txt", "data/left/sparse_parFile.txt");
 	return 1;
 }
