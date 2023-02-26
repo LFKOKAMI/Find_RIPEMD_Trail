@@ -23,7 +23,7 @@ int search(int threadNum, int outputInfo, int start, int end, int opStart, int o
 		diff, msgDiff, bfDiff);
 
 	if (!find) {
-		cout << "wrong diff, please adjust inDiff/outDiff" << endl;
+		cout << "wrong diff, please adjust isF/isV/isC or the known part of diff" << endl;
 		return 1;
 	}
 
@@ -42,7 +42,7 @@ int search(int threadNum, int outputInfo, int start, int end, int opStart, int o
 	//output other information
 	find = primitive.autoCheck(start, isRight, msgDiff, diff, bfDiff);
 	if (!find)
-		cout << "wrong diff, please adjust isF/isV/isC or inDiff/outDiff" << endl;
+		cout << "wrong diff, please adjust isF/isV/isC or the known part of diff" << endl;
 }
 
 void outputParameters(int varLength, int start, int end, int opStart, int opSteps, int isRight, vector<int>& isC, vector<int>&  isF, vector<int>& isV) {
